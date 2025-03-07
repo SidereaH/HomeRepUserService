@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: HomeRepUserService
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5433/homerep_userservice
+    username: "postgres"
+    password: "postgres"
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+server:
+  port: 8083
+grpc:
+  client:
+    location-service:
+      address: static://localhost:8084
+      negotiation-type: plaintext

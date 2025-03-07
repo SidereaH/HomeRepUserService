@@ -1,0 +1,74 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.3'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.google.protobuf' version '0.9.4'
+}
+
+group = 'ru.homerep.userservice'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'net.devh:grpc-spring-boot-starter:2.14.0.RELEASE' // gRPC для Spring Boot
+    implementation 'io.grpc:grpc-netty-shaded:1.54.0' // gRPC Netty
+    implementation 'io.grpc:grpc-protobuf:1.54.0' // gRPC Protobuf
+    implementation 'io.grpc:grpc-stub:1.54.0' // gRPC Stub
+    implementation 'com.google.protobuf:protobuf-java:3.21.7'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'org.postgresql:postgresql'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.21.7" // Компилятор Protobuf
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:1.54.0" // Генератор gRPC-кода
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.plugins {
+                grpc {} // Включить генерацию gRPC-кода
+            }
+        }
+    }
+}
+sourceSets {
+    main {
+        proto {
+            srcDir 'src/main/proto' // Папка с .proto-файлами
+        }
+        java {
+            srcDirs 'build/generated/source/proto/main/grpc' // Генерация gRPC-кода
+            srcDirs 'build/generated/source/proto/main/java' // Генерация Protobuf-кода
+        }
+    }
+}
+tasks.named('test') {
+    useJUnitPlatform()
+}
