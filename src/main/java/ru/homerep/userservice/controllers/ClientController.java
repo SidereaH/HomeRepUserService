@@ -1,6 +1,7 @@
 package ru.homerep.userservice.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +9,7 @@ import ru.homerep.userservice.models.Client;
 import ru.homerep.userservice.models.GeoPair;
 import ru.homerep.userservice.services.ClientService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -75,6 +77,19 @@ public class ClientController {
     public ResponseEntity<GeoPair> getClientLocation(@PathVariable Long id) {
         try {
             GeoPair location = clientService.getClientLocation(id);
+            return new ResponseEntity<>(location, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("/{id}/locations")
+    public ResponseEntity<List<GeoPair>> getLocationHistory(
+            @PathVariable Long id,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime
+    ) {
+        try {
+            List<GeoPair> location = clientService.getLocationHistory(id, startTime, endTime);
             return new ResponseEntity<>(location, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

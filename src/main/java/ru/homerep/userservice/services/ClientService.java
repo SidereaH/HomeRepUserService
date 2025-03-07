@@ -7,6 +7,7 @@ import ru.homerep.userservice.models.Client;
 import ru.homerep.userservice.models.GeoPair;
 import ru.homerep.userservice.repositories.ClientRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -53,13 +54,14 @@ public class ClientService {
     }
 
     public void updateClientLocation(Long id, double lat, double lng) {
-        // Обновляем геолокацию через Location Service
         locationServiceClient.updateLocation(id, lat, lng);
     }
 
     public GeoPair getClientLocation(long userId) {
-        // Получаем геолокацию через Location Service
         return locationServiceClient.getLocation(userId);
+    }
+    public List<GeoPair> getLocationHistory(long userId, LocalDateTime startTime, LocalDateTime endTime){
+        return locationServiceClient.getLocationHistory(userId, startTime, endTime);
     }
 
 

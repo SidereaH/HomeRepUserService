@@ -10,8 +10,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class GeoPair {
-
-
     private  double lat;
     private  double lng;
 }
