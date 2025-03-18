@@ -22,7 +22,14 @@ public class Client {
     private String lastName;
     private String email;
     private String phone;
-
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", columnDefinition = "VARCHAR(255) DEFAULT 'CLIENT'")
+    private Status status = Status.CLIENT;
 //    @OneToMany
 //    private List<Address> addresses;
+}
+enum Status {
+    CLIENT,
+    EMPLOYEE,
+    EMPLOYER
 }
