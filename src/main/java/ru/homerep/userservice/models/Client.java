@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import ru.homerep.userservice.models.Status;
 
 @Table(name = "clients")
 @Entity
@@ -27,9 +27,4 @@ public class Client {
     private Status status = Status.CLIENT;
 //    @OneToMany
 //    private List<Address> addresses;
-}
-enum Status {
-    CLIENT,
-    EMPLOYEE,
-    EMPLOYER
 }

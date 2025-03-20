@@ -1,6 +1,7 @@
 package ru.homerep.userservice.services;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.homerep.userservice.models.Client;
@@ -10,6 +11,7 @@ import ru.homerep.userservice.repositories.ClientRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 public class ClientService {
     private final LocationServiceClient locationServiceClient;
@@ -54,6 +56,7 @@ public class ClientService {
     }
 
     public void updateClientLocation(Long id, double lat, double lng) {
+        log.info("Updating location for client with ID: {}", id);
         locationServiceClient.updateLocation(id, lat, lng);
     }
 

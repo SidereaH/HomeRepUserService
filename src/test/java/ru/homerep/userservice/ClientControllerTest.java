@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.homerep.userservice.controllers.ClientController;
 import ru.homerep.userservice.models.Client;
 import ru.homerep.userservice.services.ClientService;
-
+import ru.homerep.userservice.models.Status;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -45,8 +45,8 @@ public class ClientControllerTest {
     @Test
     void testCreateClient() throws Exception {
 
-        Client client = new Client(null, "John", "Doe", "Smith", "john.doe@example.com", "123456789");
-        Client savedClient = new Client(1L, "John", "Doe", "Smith", "john.doe@example.com", "123456789");
+        Client client = new Client(null, "John", "Doe", "Smith", "john.doe@example.com", "123456789", Status.CLIENT);
+        Client savedClient = new Client(1L, "John", "Doe", "Smith", "john.doe@example.com", "123456789", Status.CLIENT);
 
         when(clientService.createClient(any(Client.class))).thenReturn(savedClient);
 
@@ -64,8 +64,8 @@ public class ClientControllerTest {
     @Test
     void testGetAllClients() throws Exception {
 
-        Client client1 = new Client(1L, "John", "Doe", "Smith", "john.doe@example.com", "123456789");
-        Client client2 = new Client(2L, "Jane", "Doe", "Smith", "jane.doe@example.com", "987654321");
+        Client client1 = new Client(1L, "John", "Doe", "Smith", "john.doe@example.com", "123456789", Status.CLIENT);
+        Client client2 = new Client(2L, "Jane", "Doe", "Smith", "jane.doe@example.com", "987654321",Status.CLIENT);
 
         when(clientService.getAllClients()).thenReturn(Arrays.asList(client1, client2));
 
@@ -79,7 +79,7 @@ public class ClientControllerTest {
     @Test
     void testGetClientByIdFound() throws Exception {
 
-        Client client = new Client(1L, "John", "Doe", "Smith", "john.doe@example.com", "123456789");
+        Client client = new Client(1L, "John", "Doe", "Smith", "john.doe@example.com", "123456789",Status.CLIENT);
 
         when(clientService.getClientById(1L)).thenReturn(client);
 
@@ -104,7 +104,7 @@ public class ClientControllerTest {
     @Test
     void testUpdateClient() throws Exception {
 
-        Client updatedClient = new Client(1L, "John", "Doe", "Smith", "john.doe@example.com", "123456789");
+        Client updatedClient = new Client(1L, "John", "Doe", "Smith", "john.doe@example.com", "123456789", Status.CLIENT);
         when(clientService.updateClient(eq(1L), any(Client.class))).thenReturn(updatedClient);
 
 
@@ -120,7 +120,7 @@ public class ClientControllerTest {
     @Test
     void testUpdateClientNotFound() throws Exception {
 
-        Client updatedClient = new Client(1L, "John", "Doe", "Smith", "john.doe@example.com", "123456789");
+        Client updatedClient = new Client(1L, "John", "Doe", "Smith", "john.doe@example.com", "123456789", Status.CLIENT);
         when(clientService.updateClient(eq(1L), any(Client.class))).thenReturn(null);
 
         mockMvc.perform(put("/clients/1")

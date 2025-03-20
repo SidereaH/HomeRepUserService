@@ -1,5 +1,6 @@
 package ru.homerep.userservice.services;
 
+import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 import ru.homerep.locationservice.LocationServiceGrpc;
@@ -16,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class LocationServiceClient {
 
@@ -36,9 +38,10 @@ public class LocationServiceClient {
                 .setLat(lat)
                 .setLng(lng)
                 .build();
-
+        log.info("Updating location for user {} to {}, {}", userId, lat, lng);
         UpdateLocationResponse response = locationServiceBlockingStub.updateLocation(request);
         if (!response.getSuccess()) {
+            log.error("Failed to update location for user {}", userId);
             throw new RuntimeException("Failed to update location");
         }
     }

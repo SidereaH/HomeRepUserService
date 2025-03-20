@@ -57,8 +57,7 @@ public class ClientController {
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    // Обновление геолокации пользователя
-    @PutMapping("/{id}/location")
+    @PostMapping("/{id}/location")
     public ResponseEntity<Void> updateClientLocation(
             @PathVariable Long id,
             @RequestParam double lat,
