@@ -1,17 +1,19 @@
 package ru.homerep.userservice.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.homerep.userservice.dto.GeoTimeRequest;
 import ru.homerep.userservice.models.Client;
 import ru.homerep.userservice.models.GeoPair;
 import ru.homerep.userservice.services.ClientService;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequestMapping("/clients")
 public class ClientController {
@@ -81,14 +83,14 @@ public class ClientController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    @GetMapping("/{id}/locations")
-    public ResponseEntity<List<GeoPair>> getLocationHistory(
-            @PathVariable Long id,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime
+    //добавить валидацию через аннотацию
+    @GetMapping("/locations")
+    public ResponseEntity<GeoPair[]> getLocationHistory(
+            @RequestBody GeoTimeRequest timeRequest
     ) {
+        log.info("getting locatyions startTime = {}", timeRequest.getStartTime());
         try {
-            List<GeoPair> location = clientService.getLocationHistory(id, startTime, endTime);
+            GeoPair[] location = clientService.getLocationHistory(timeRequest.getUserid(), timeRequest.getStartTime(), timeRequest.getEndTime());
             return new ResponseEntity<>(location, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

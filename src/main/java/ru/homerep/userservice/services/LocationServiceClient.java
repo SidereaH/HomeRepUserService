@@ -1,5 +1,6 @@
 package ru.homerep.userservice.services;
 
+import com.google.cloud.location.Location;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import ru.homerep.locationservice.GetLocationHistoryResponse;
 import ru.homerep.userservice.models.GeoPair;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,8 +37,7 @@ public class LocationServiceClient {
     public void updateLocation(long userId, double lat, double lng) {
         UpdateLocationRequest request = UpdateLocationRequest.newBuilder()
                 .setUserId(userId)
-                .setLat(lat)
-                .setLng(lng)
+                .setLocation(ru.homerep.locationservice.GeoPair.newBuilder().setLat(lat).setLng(lng).build())
                 .build();
         log.info("Updating location for user {} to {}, {}", userId, lat, lng);
         UpdateLocationResponse response = locationServiceBlockingStub.updateLocation(request);
@@ -58,7 +59,7 @@ public class LocationServiceClient {
                 .build();
 
         GetLocationResponse response = locationServiceBlockingStub.getLocation(request);
-        return new GeoPair(response.getLat(), response.getLng());
+        return new GeoPair(response.getLocation().getLat(), response.getLocation().getLng());
     }
 
     /**
@@ -68,21 +69,26 @@ public class LocationServiceClient {
      * @param startTime Начало периода (в формате RFC3339).
      * @param endTime   Конец периода (в формате RFC3339).
      * @return Список объектов GeoPair с широтой и долготой.
-     */public List<GeoPair> getLocationHistory(long userId, LocalDateTime startTime, LocalDateTime endTime) {
-        String startTimeStr = startTime.format(DateTimeFormatter.ISO_DATE_TIME);
-        String endTimeStr = endTime.format(DateTimeFormatter.ISO_DATE_TIME);
+     */public GeoPair[] getLocationHistory(long userId, String startTime, String endTime) {
+
 
         GetLocationHistoryRequest request = GetLocationHistoryRequest.newBuilder()
                 .setUserId(userId)
-                .setStartTime(startTimeStr)
-                .setEndTime(endTimeStr)
+                .setStartTime(startTime)
+                .setEndTime(endTime)
                 .build();
 
+        log.info("Getting location history for user {} from {} to {}", userId, startTime, endTime);
         GetLocationHistoryResponse response = locationServiceBlockingStub.getLocationHistory(request);
+        log.info("resp"+ response.toString());
+        List<String> locationTimestampList = response.getTimestampsList();
+        List<ru.homerep.locationservice.GeoPair> locationList = response.getLocationsList();
+        GeoPair[] history = new GeoPair[locationList.size()];
 
-        return response.getLocationsList().stream()
-                .map(geoPair -> new GeoPair(geoPair.getLat(), geoPair.getLng()))
-                .collect(Collectors.toList());
+        for(int i = 0; i<locationTimestampList.size();i++){
+            history[i] = new GeoPair(locationList.get(i).getLat(), locationList.get(i).getLng(), OffsetDateTime.parse(locationTimestampList.get(i)) );
+        }
+        return history;
     }
 
 }

@@ -32,6 +32,8 @@ dependencies {
     implementation 'io.grpc:grpc-protobuf:1.54.0' // gRPC Protobuf
     implementation 'io.grpc:grpc-stub:1.54.0' // gRPC Stub
     implementation 'com.google.protobuf:protobuf-java:3.21.7'
+    // https://mvnrepository.com/artifact/net.devh/grpc-spring-boot-starter
+    implementation("net.devh:grpc-spring-boot-starter:2.15.0.RELEASE")
     // https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api
     implementation group: 'javax.annotation', name: 'javax.annotation-api', version: '1.3.2'
     compileOnly 'org.projectlombok:lombok'

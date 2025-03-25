@@ -63,7 +63,8 @@ public class ClientService {
     public GeoPair getClientLocation(long userId) {
         return locationServiceClient.getLocation(userId);
     }
-    public List<GeoPair> getLocationHistory(long userId, LocalDateTime startTime, LocalDateTime endTime){
+    public GeoPair[] getLocationHistory(long userId, String startTime, String endTime){
+
         return locationServiceClient.getLocationHistory(userId, startTime, endTime);
     }
 
