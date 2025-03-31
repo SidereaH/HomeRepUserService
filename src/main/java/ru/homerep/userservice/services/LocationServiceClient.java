@@ -1,6 +1,7 @@
 package ru.homerep.userservice.services;
 
 import com.google.cloud.location.Location;
+import com.google.protobuf.ProtocolStringList;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
@@ -80,13 +81,13 @@ public class LocationServiceClient {
 
         log.info("Getting location history for user {} from {} to {}", userId, startTime, endTime);
         GetLocationHistoryResponse response = locationServiceBlockingStub.getLocationHistory(request);
-        log.info("resp"+ response.toString());
-        List<String> locationTimestampList = response.getTimestampsList();
+        log.info("resp"+ response);
+        ProtocolStringList timestamps = response.getTimestampsList();
         List<ru.homerep.locationservice.GeoPair> locationList = response.getLocationsList();
         GeoPair[] history = new GeoPair[locationList.size()];
 
-        for(int i = 0; i<locationTimestampList.size();i++){
-            history[i] = new GeoPair(locationList.get(i).getLat(), locationList.get(i).getLng(), OffsetDateTime.parse(locationTimestampList.get(i)) );
+        for(int i = 0; i<response.getTimestampsCount(); i++){
+            history[i] = new GeoPair(locationList.get(i).getLat(), locationList.get(i).getLng(), OffsetDateTime.parse(timestamps.get(i)) );
         }
         return history;
     }
