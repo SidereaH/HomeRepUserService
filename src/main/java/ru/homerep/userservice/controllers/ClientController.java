@@ -10,8 +10,10 @@ import ru.homerep.userservice.dto.GeoTimeRequest;
 import ru.homerep.userservice.models.Client;
 import ru.homerep.userservice.models.GeoPair;
 import ru.homerep.userservice.services.ClientService;
+import ru.homerep.userservice.services.LocationServiceClient;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 @Slf4j
 @RestController
@@ -19,10 +21,12 @@ import java.util.List;
 public class ClientController {
 
     private final ClientService clientService;
+    private final LocationServiceClient locationService;
 
     @Autowired
-    public ClientController(ClientService clientService) {
+    public ClientController(ClientService clientService, LocationServiceClient locationService) {
         this.clientService = clientService;
+        this.locationService = locationService;
     }
 
     @PostMapping
@@ -95,6 +99,12 @@ public class ClientController {
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+    @GetMapping("/location/area")
+    public ResponseEntity<Long[]> getLocationHistory(@RequestParam double lat,
+                                                     @RequestParam double lng,
+                                                     @RequestParam int maxUsers){
+        return new ResponseEntity<>(Arrays.stream(locationService.getUsersByLatLng(lat,lng, maxUsers)).boxed().toArray(Long[]::new), HttpStatus.OK);
     }
 
 }

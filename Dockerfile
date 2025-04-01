@@ -2,9 +2,12 @@ FROM gradle:8.4-jdk21 AS builder
 
 WORKDIR /app
 
+COPY build.gradle settings.gradle ./
+RUN gradle --no-daemon dependencies
+
 COPY . .
 
-RUN gradle clean build -x test
+RUN gradle --no-daemon clean generateProto build -x test
 
 FROM eclipse-temurin:21-jre
 

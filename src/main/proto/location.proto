@@ -4,7 +4,9 @@ option java_multiple_files = true;
 option java_package = "ru.homerep.locationservice";
 option java_outer_classname = "LocationServiceProto";
 
+
 package locationservice;
+
 // Сообщение для хранения геолокации
 message GeoPair {
   double lat = 1;
@@ -19,6 +21,7 @@ service LocationService {
   rpc GetLocation (GetLocationRequest) returns (GetLocationResponse);
   // Получение истории геолокаций пользователя
   rpc GetLocationHistory (GetLocationHistoryRequest) returns (GetLocationHistoryResponse);
+  rpc GetUsersBetweenLongAndLat (GetUsersBetweenLongAndLatRequest) returns (GetUsersBetweenLongAndLatResponse);
 }
 
 // Запрос для обновления геолокации
@@ -47,6 +50,14 @@ message GetLocationHistoryRequest {
   int64 user_id = 1;
   string start_time = 2; // Начало периода (в формате RFC3339)
   string end_time = 3;   // Конец периода (в формате RFC3339)
+}
+message GetUsersBetweenLongAndLatRequest{
+  GeoPair location = 1;
+  int64 maxUsers = 2;
+}
+message GetUsersBetweenLongAndLatResponse{
+  repeated int64 userid=1;
+
 }
 
 // Ответ с историей геолокаций

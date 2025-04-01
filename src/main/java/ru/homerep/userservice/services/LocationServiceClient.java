@@ -5,13 +5,7 @@ import com.google.protobuf.ProtocolStringList;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
-import ru.homerep.locationservice.LocationServiceGrpc;
-import ru.homerep.locationservice.GetLocationRequest;
-import ru.homerep.locationservice.GetLocationResponse;
-import ru.homerep.locationservice.UpdateLocationRequest;
-import ru.homerep.locationservice.UpdateLocationResponse;
-import ru.homerep.locationservice.GetLocationHistoryRequest;
-import ru.homerep.locationservice.GetLocationHistoryResponse;
+import ru.homerep.locationservice.*;
 import ru.homerep.userservice.models.GeoPair;
 
 import java.time.LocalDateTime;
@@ -90,6 +84,17 @@ public class LocationServiceClient {
             history[i] = new GeoPair(locationList.get(i).getLat(), locationList.get(i).getLng(), OffsetDateTime.parse(timestamps.get(i)) );
         }
         return history;
+    }
+    public long[] getUsersByLatLng(double lat, double lng, int users) {
+         GetUsersBetweenLongAndLatRequest request = GetUsersBetweenLongAndLatRequest.newBuilder()
+
+                 .setLocation(
+                         ru.homerep.locationservice.GeoPair.newBuilder().setLat(lat).setLng(lng).build()
+                 )
+                 .setMaxUsers(users)
+                 .build();
+         GetUsersBetweenLongAndLatResponse response = locationServiceBlockingStub.getUsersBetweenLongAndLat(request);
+         return  response.getUseridList().stream().mapToLong(l -> l).toArray();
     }
 
 }
