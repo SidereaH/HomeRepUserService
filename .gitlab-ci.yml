@@ -4,7 +4,7 @@ stages:
   - deploy
 
 variables:
-  DOCKER_HOST: "tcp://<SWARM_MANAGER_IP>:2376"
+  DOCKER_HOST: "tcp://82.202.143.3:2376"
   DOCKER_TLS_VERIFY: "1"
   CI_REGISTRY: "registry.gitlab.com"
   CI_IMAGE_NAME: "${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:latest"
@@ -35,7 +35,7 @@ build:
   dependencies:
     - test
   only:
-    - main
+    - master
     - merge_requests
 
 deploy:
@@ -48,7 +48,7 @@ deploy:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
     - docker stack deploy --compose-file docker-compose.prod.yml homerep --with-registry-auth
   only:
-    - main
+    - master
   environment:
     name: production
     url: http://localhost:8083
