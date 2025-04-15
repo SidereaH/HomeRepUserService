@@ -2,7 +2,7 @@ spring:
   application:
     name: HomeRepUserService
   datasource:
-    url: jdbc:postgresql://localhost:5433/homerep_userservice
+    url: jdbc:postgresql://localhost:5434/homerep_userservice
     username: "postgres"
     password: "postgres"
     driver-class-name: org.postgresql.Driver
@@ -13,8 +13,10 @@ spring:
       ddl-auto: update
 server:
   port: 8083
+
 grpc:
   client:
     location-service:
       address: static://localhost:50051
       negotiation-type: plaintext
+

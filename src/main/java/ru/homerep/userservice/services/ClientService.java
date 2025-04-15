@@ -8,7 +8,6 @@ import ru.homerep.userservice.models.Client;
 import ru.homerep.userservice.models.GeoPair;
 import ru.homerep.userservice.repositories.ClientRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
