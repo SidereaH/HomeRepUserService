@@ -4,7 +4,7 @@ stages:
   - deploy
 
 variables:
-  DOCKER_HOST: "tcp://82.202.143.3:2377"
+  DOCKER_HOST: "tcp://82.202.143.3:2376"
   DOCKER_TLS_VERIFY: "1"
   DOCKER_CERT_PATH: "/certs"
   CI_REGISTRY: "registry.gitlab.com"
