@@ -44,7 +44,7 @@ deploy_docker_stage:
     - docker:19.03.1-dind
   stage: deploy
   variables:
-    DOCKER_HOST: "tcp://${DOCKER_HOST}:2376"
+    DOCKER_HOST: "tcp://${DOCKER_HOST}"
   before_script:
     - apk add jq
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
