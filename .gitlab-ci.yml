@@ -4,10 +4,9 @@ stages:
   - deploy
 
 variables:
-  DOCKER_HOST: "tcp://82.202.143.3:2375"
-  DOCKER_TLS_VERIFY: "0"
+  DOCKER_HOST: "82.202.143.3"
   CI_REGISTRY: "registry.gitlab.com"
-  CI_IMAGE_NAME: "${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:latest"
+  CI_IMAGE_NAME: $CI_REGISTRY_IMAGE:latest
 
 test:
   stage: test
@@ -27,36 +26,27 @@ build:
   services:
     - docker:24.0-dind
   variables:
-    DOCKER_HOST: "tcp://82.202.143.3:2376"
-    DOCKER_TLS_VERIFY: "0"
-    DOCKER_CERT_PATH: "/root/.docker"
-  before_script:
-    - mkdir -p "$DOCKER_CERT_PATH"
-    - echo "$DOCKER_CA_PEM" > "$DOCKER_CERT_PATH/ca.pem"
-    - echo "$DOCKER_CERT_PEM" > "$DOCKER_CERT_PATH/cert.pem"
-    - echo "$DOCKER_KEY_PEM" > "$DOCKER_CERT_PATH/key.pem"
-    - chmod 600 "$DOCKER_CERT_PATH"/*  # Важно! Иначе Docker отвергнет ключи
+    CI_REGISTRY_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH
+    CI_IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-    - docker build -t "$CI_IMAGE_NAME" .
-    - docker push "$CI_IMAGE_NAME"
-  dependencies:
-    - test
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $CI_IMAGE_NAME .
+    - docker push $CI_IMAGE_NAME
   only:
     - master
-    - merge_requests
 
-deploy:
-  stage: deploy
-  image: docker:24.0
-  services:
-    - docker:24.0-dind
-  script:
-    - echo "Deploying to Swarm..."
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-    - docker stack deploy --compose-file docker-compose.prod.yml homerep --with-registry-auth
-  only:
-    - master
+deploy_docker_stage:
   environment:
-    name: production
-    url: http://localhost:8083
+    name: stage
+    url: https://someurl
+  image: docker:19.03.1
+  services:
+    - docker:19.03.1-dind
+  stage: deploy
+  variables:
+    DOCKER_HOST: "tcp://${DOCKER_HOST}:2376"
+  before_script:
+    - apk add jq
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+  - export CONFIG=$(echo $CONFIG1_STAGE | jq -c) && docker stack deploy --with-registry-auth -c ./docker/stage/app.yml app
