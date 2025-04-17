@@ -5,6 +5,7 @@ stages:
 
 variables:
   CI_REGISTRY: "registry.gitlab.com"
+  CI_REGISTRY_IMAGE: user_service
   CI_IMAGE_NAME: $CI_REGISTRY_IMAGE:latest
 
 test:
