@@ -4,7 +4,6 @@ stages:
   - deploy
 
 variables:
-  DOCKER_HOST: "82.202.143.3"
   CI_REGISTRY: "registry.gitlab.com"
   CI_IMAGE_NAME: $CI_REGISTRY_IMAGE:latest
 
