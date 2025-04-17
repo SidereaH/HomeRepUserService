@@ -4,12 +4,10 @@ stages:
   - deploy
 
 variables:
-  DOCKER_HOST: "tcp://82.202.143.3:2376"
-  DOCKER_TLS_VERIFY: "1"
-  DOCKER_CERT_PATH: "/certs"
+  DOCKER_HOST: "tcp://82.202.143.3:2375"
+  DOCKER_TLS_VERIFY: "0"
   CI_REGISTRY: "registry.gitlab.com"
   CI_IMAGE_NAME: "${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:latest"
-
 
 test:
   stage: test
@@ -28,12 +26,6 @@ build:
   image: docker:24.0
   services:
     - docker:24.0-dind
-  before_script:
-    - mkdir -p "$DOCKER_CERT_PATH"
-    - echo "$DOCKER_CA_PEM" > "$DOCKER_CERT_PATH/ca.pem"
-    - echo "$DOCKER_CERT_PEM" > "$DOCKER_CERT_PATH/cert.pem"
-    - echo "$DOCKER_KEY_PEM" > "$DOCKER_CERT_PATH/key.pem"
-    - chmod 600 "$DOCKER_CERT_PATH"/*
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
     - docker build -t "$CI_IMAGE_NAME" .
