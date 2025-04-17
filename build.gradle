@@ -28,10 +28,10 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'net.devh:grpc-spring-boot-starter:2.14.0.RELEASE' // gRPC для Spring Boot
-    implementation 'io.grpc:grpc-netty-shaded:1.54.0' // gRPC Netty
-    implementation 'io.grpc:grpc-protobuf:1.54.0' // gRPC Protobuf
-    implementation 'io.grpc:grpc-stub:1.54.0' // gRPC Stub
+    implementation 'net.devh:grpc-spring-boot-starter:2.14.0.RELEASE'
+    implementation 'io.grpc:grpc-netty-shaded:1.54.0'
+    implementation 'io.grpc:grpc-protobuf:1.54.0'
+    implementation 'io.grpc:grpc-stub:1.54.0'
     implementation 'com.google.protobuf:protobuf-java:3.21.7'
     // https://mvnrepository.com/artifact/net.devh/grpc-spring-boot-starter
     implementation("net.devh:grpc-spring-boot-starter:2.15.0.RELEASE")
