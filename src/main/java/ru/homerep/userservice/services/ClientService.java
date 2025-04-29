@@ -1,9 +1,9 @@
 package ru.homerep.userservice.services;
 
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.homerep.userservice.models.Client;
 import ru.homerep.userservice.models.GeoPair;
 import ru.homerep.userservice.repositories.ClientRepository;
@@ -29,9 +29,13 @@ public class ClientService {
     public List<Client> getAllClients() {
         return clientRepository.findAll();
     }
-    @Transactional
+    @Transactional(readOnly = true)
     public Client getClientById(Long id) {
         return clientRepository.findById(id).orElse(null);
+    }
+    @Transactional
+    public Client getClientByPhoneNumber(String phoneNumber) {
+        return clientRepository.findByPhone(phoneNumber);
     }
     @Transactional
     public Client updateClient(Long id, Client updatedClient) {

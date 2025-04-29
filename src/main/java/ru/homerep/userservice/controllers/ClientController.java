@@ -39,6 +39,14 @@ public class ClientController {
         List<Client> clients = clientService.getAllClients();
         return new ResponseEntity<>(clients, HttpStatus.OK);
     }
+    @GetMapping("/phone")
+    public ResponseEntity<Client> getClientById(@RequestParam String phone) {
+        Client client = clientService.getClientByPhoneNumber(phone);
+        if (client == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(client, HttpStatus.OK);
+    }
     @GetMapping("/{id}")
     public ResponseEntity<Client> getClientById(@PathVariable Long id) {
         Client client = clientService.getClientById(id);

@@ -6,5 +6,5 @@ import ru.homerep.userservice.models.Client;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
-
+    Client findByPhone(String phone);
 }
