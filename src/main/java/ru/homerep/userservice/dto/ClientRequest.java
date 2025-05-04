@@ -1,11 +1,13 @@
 package ru.homerep.userservice.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import ru.homerep.userservice.models.Client;
 import ru.homerep.userservice.models.Status;
 @Getter
 @Setter
+@AllArgsConstructor
 public class ClientRequest {
     private Long id;
     private String firstName;

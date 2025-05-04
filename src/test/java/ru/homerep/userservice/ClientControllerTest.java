@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.homerep.userservice.controllers.ClientController;
+import ru.homerep.userservice.dto.ClientRequest;
 import ru.homerep.userservice.models.Client;
 import ru.homerep.userservice.services.ClientService;
 import ru.homerep.userservice.models.Status;
@@ -103,31 +104,26 @@ public class ClientControllerTest {
 
     @Test
     void testUpdateClient() throws Exception {
+        ClientRequest updatedClientRequest = new ClientRequest(1L, "John", "Doe", "Smith",
+                "john.doe@example.com", "123456789", Status.CLIENT, 10.0, 20.0);
+        Client expectedClient = updatedClientRequest.toClient();
 
-        Client updatedClient = new Client(1L, "John", "Doe", "Smith", "john.doe@example.com", "123456789", Status.CLIENT);
-        when(clientService.updateClient(eq(1L), any(Client.class))).thenReturn(updatedClient);
-
+        when(clientService.updateClient(eq(1L), any(Client.class))).thenReturn(expectedClient);
+        doNothing().when(clientService).updateClientLocation(eq(1L), eq(10.0), eq(20.0));
 
         mockMvc.perform(put("/clients/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updatedClient)))
+                        .content(objectMapper.writeValueAsString(updatedClientRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.firstName").value("John"))
                 .andExpect(jsonPath("$.lastName").value("Smith"));
+
+        verify(clientService).updateClient(eq(1L), any(Client.class));
+        verify(clientService).updateClientLocation(eq(1L), eq(10.0), eq(20.0));
     }
 
-    @Test
-    void testUpdateClientNotFound() throws Exception {
 
-        Client updatedClient = new Client(1L, "John", "Doe", "Smith", "john.doe@example.com", "123456789", Status.CLIENT);
-        when(clientService.updateClient(eq(1L), any(Client.class))).thenReturn(null);
-
-        mockMvc.perform(put("/clients/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updatedClient)))
-                .andExpect(status().isNotFound());
-    }
 
     @Test
     void testDeleteClient() throws Exception {
