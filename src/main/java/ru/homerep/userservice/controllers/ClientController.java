@@ -32,6 +32,7 @@ public class ClientController {
     @PostMapping
     public ResponseEntity<Client> createClient(@RequestBody Client client) {
         Client savedClient = clientService.createClient(client);
+        clientService.updateClientLocation(savedClient.getId(), 0, 0);
         return new ResponseEntity<>(savedClient, HttpStatus.CREATED);
     }
     @GetMapping
@@ -40,7 +41,7 @@ public class ClientController {
         return new ResponseEntity<>(clients, HttpStatus.OK);
     }
     @GetMapping("/phone")
-    public ResponseEntity<Client> getClientById(@RequestParam String phone) {
+    public ResponseEntity<Client> getClientByPhone(@RequestParam String phone) {
         Client client = clientService.getClientByPhoneNumber(phone);
         if (client == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
