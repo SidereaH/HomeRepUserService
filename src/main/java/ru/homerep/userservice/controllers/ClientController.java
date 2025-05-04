@@ -58,7 +58,7 @@ public class ClientController {
     @PutMapping("/{id}")
     public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody ClientRequest client) {
         Client updatedClient = clientService.updateClient(id, client.toClient());
-        clientService.updateClientLocation(updatedClient.getId(), client.getLatitude(), client.getLatitude());
+        clientService.updateClientLocation(updatedClient.getId(), client.getLatitude(), client.getLongtitude());
         if (updatedClient == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
