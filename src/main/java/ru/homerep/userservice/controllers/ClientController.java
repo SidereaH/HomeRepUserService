@@ -2,17 +2,16 @@ package ru.homerep.userservice.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.homerep.userservice.dto.GeoTimeRequest;
+import ru.homerep.userservice.dto.ClientRequest;
 import ru.homerep.userservice.models.Client;
 import ru.homerep.userservice.models.GeoPair;
 import ru.homerep.userservice.services.ClientService;
 import ru.homerep.userservice.services.LocationServiceClient;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 @Slf4j
@@ -57,8 +56,9 @@ public class ClientController {
         return new ResponseEntity<>(client, HttpStatus.OK);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody Client client) {
-        Client updatedClient = clientService.updateClient(id, client);
+    public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody ClientRequest client) {
+        Client updatedClient = clientService.updateClient(id, client.toClient());
+        clientService.updateClientLocation(updatedClient.getId(), client.getLatitude(), client.getLatitude());
         if (updatedClient == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
