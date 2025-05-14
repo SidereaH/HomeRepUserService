@@ -48,6 +48,7 @@ public class ClientService {
         existingClient.setLastName(updatedClient.getLastName());
         existingClient.setEmail(updatedClient.getEmail());
         existingClient.setPhone(updatedClient.getPhone());
+        existingClient.setStatus(updatedClient.getStatus());
         return clientRepository.save(existingClient);
     }
     public boolean deleteClient(Long id) {
