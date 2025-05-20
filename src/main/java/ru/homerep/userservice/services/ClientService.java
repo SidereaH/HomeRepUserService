@@ -47,12 +47,31 @@ public class ClientService {
         if (existingClient == null) {
             return null;
         }
-        existingClient.setFirstName(updatedClient.getFirstName());
-        existingClient.setMiddleName(updatedClient.getMiddleName());
-        existingClient.setLastName(updatedClient.getLastName());
-        existingClient.setEmail(updatedClient.getEmail());
-        existingClient.setPhone(updatedClient.getPhone());
-        existingClient.setStatus(updatedClient.getStatus());
+
+        if (updatedClient.getFirstName() != null && !updatedClient.getFirstName().isEmpty()) {
+            existingClient.setFirstName(updatedClient.getFirstName());
+        }
+
+        if (updatedClient.getMiddleName() != null && !updatedClient.getMiddleName().isEmpty()) {
+            existingClient.setMiddleName(updatedClient.getMiddleName());
+        }
+
+        if (updatedClient.getLastName() != null && !updatedClient.getLastName().isEmpty()) {
+            existingClient.setLastName(updatedClient.getLastName());
+        }
+
+        if (updatedClient.getEmail() != null && !updatedClient.getEmail().isEmpty()) {
+            existingClient.setEmail(updatedClient.getEmail());
+        }
+
+        if (updatedClient.getPhone() != null && !updatedClient.getPhone().isEmpty()) {
+            existingClient.setPhone(updatedClient.getPhone());
+        }
+
+        if (updatedClient.getStatus() != null) {
+            existingClient.setStatus(updatedClient.getStatus());
+        }
+
         return clientRepository.save(existingClient);
     }
     public boolean deleteClient(Long id) {
