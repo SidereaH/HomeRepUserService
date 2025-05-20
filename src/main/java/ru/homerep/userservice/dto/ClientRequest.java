@@ -7,7 +7,6 @@ import ru.homerep.userservice.models.Client;
 import ru.homerep.userservice.models.Status;
 @Getter
 @Setter
-@AllArgsConstructor
 public class ClientRequest {
     private Long id;
     private String firstName;
@@ -23,4 +22,15 @@ public class ClientRequest {
         return new Client(id, firstName, middleName, lastName, email, phone, status);
     }
 
+    public ClientRequest(Long id, String firstName, String middleName, String lastName, String email, String phone, Status status, Double latitude, Double longtitude) {
+        this.id = id;
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+        this.status = status;
+        this.latitude = latitude;
+        this.longtitude = longtitude;
+    }
 }

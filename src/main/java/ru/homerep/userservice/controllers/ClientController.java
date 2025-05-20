@@ -58,10 +58,13 @@ public class ClientController {
     @PutMapping("/{id}")
     public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody ClientRequest client) {
         Client updatedClient = clientService.updateClient(id, client.toClient());
-        clientService.updateClientLocation(updatedClient.getId(), client.getLatitude(), client.getLongtitude());
+        if (client.getLatitude() == null || client.getLongtitude() == null) {
+            return new ResponseEntity<>(updatedClient, HttpStatus.OK);
+        }
         if (updatedClient == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        clientService.updateClientLocation(updatedClient.getId(), client.getLatitude(), client.getLongtitude());
         return new ResponseEntity<>(updatedClient, HttpStatus.OK);
     }
     @DeleteMapping("/{id}")
