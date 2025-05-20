@@ -85,6 +85,15 @@ public class ClientController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/{id}/mail")
+    public ResponseEntity<String> getClientMail(@PathVariable Long id) {
+        try{
+            return new ResponseEntity<>(clientService.getClientEmail(id), HttpStatus.OK);
+        }
+        catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
     // Получение геолокации пользователя
     @GetMapping("/{id}/location")

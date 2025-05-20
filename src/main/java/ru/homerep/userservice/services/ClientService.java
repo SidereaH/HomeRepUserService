@@ -37,6 +37,10 @@ public class ClientService {
     public Client getClientByPhoneNumber(String phoneNumber) {
         return clientRepository.findByPhone(phoneNumber);
     }
+    @Transactional(readOnly = true)
+    public String getClientEmail(Long id){
+        return clientRepository.findById(id).orElseThrow(() -> new RuntimeException("No user with id " + id)).getEmail();
+    }
     @Transactional
     public Client updateClient(Long id, Client updatedClient) {
         Client existingClient = clientRepository.findById(id).orElse(null);

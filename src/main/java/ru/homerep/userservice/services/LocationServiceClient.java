@@ -1,11 +1,12 @@
 package ru.homerep.userservice.services;
 
-import com.google.cloud.location.Location;
 import com.google.protobuf.ProtocolStringList;
+import locationservice.Location;
+import locationservice.Location.*;
+import locationservice.LocationServiceGrpc;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
-import ru.homerep.locationservice.*;
 import ru.homerep.userservice.models.GeoPair;
 
 import java.time.LocalDateTime;
@@ -32,7 +33,7 @@ public class LocationServiceClient {
     public void updateLocation(long userId, double lat, double lng) {
         UpdateLocationRequest request = UpdateLocationRequest.newBuilder()
                 .setUserId(userId)
-                .setLocation(ru.homerep.locationservice.GeoPair.newBuilder().setLat(lat).setLng(lng).build())
+                .setLocation(Location.GeoPair.newBuilder().setLat(lat).setLng(lng).build())
                 .build();
         log.info("Updating location for user {} to {}, {}", userId, lat, lng);
         UpdateLocationResponse response = locationServiceBlockingStub.updateLocation(request);
@@ -77,7 +78,7 @@ public class LocationServiceClient {
         GetLocationHistoryResponse response = locationServiceBlockingStub.getLocationHistory(request);
         log.info("resp"+ response);
         ProtocolStringList timestamps = response.getTimestampsList();
-        List<ru.homerep.locationservice.GeoPair> locationList = response.getLocationsList();
+        List<Location.GeoPair> locationList = response.getLocationsList();
         GeoPair[] history = new GeoPair[locationList.size()];
 
         for(int i = 0; i<response.getTimestampsCount(); i++){
@@ -86,15 +87,17 @@ public class LocationServiceClient {
         return history;
     }
     public long[] getUsersByLatLng(double lat, double lng, int users) {
-         GetUsersBetweenLongAndLatRequest request = GetUsersBetweenLongAndLatRequest.newBuilder()
+        Location.GetUsersBetweenLongAndLatRequest request = Location.GetUsersBetweenLongAndLatRequest.newBuilder()
 
-                 .setLocation(
-                         ru.homerep.locationservice.GeoPair.newBuilder().setLat(lat).setLng(lng).build()
-                 )
-                 .setMaxUsers(users)
-                 .build();
-         GetUsersBetweenLongAndLatResponse response = locationServiceBlockingStub.getUsersBetweenLongAndLat(request);
-         return  response.getUseridList().stream().mapToLong(l -> l).toArray();
+                .setLocation(
+                        Location.GeoPair.newBuilder().setLat(lat).setLng(lng).build()
+                )
+                .setMaxUsers(users)
+                .build();
+        Location.GetUsersBetweenLongAndLatResponse response = locationServiceBlockingStub.getUsersBetweenLongAndLat(request);
+        return response.getUserList().stream()
+                .mapToLong(Location.UserResponse::getUserId)
+                .toArray();
     }
 
 }
