@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.homerep.userservice.controllers.ClientController;
 import ru.homerep.userservice.models.Client;
 import ru.homerep.userservice.models.GeoPair;
 import ru.homerep.userservice.repositories.ClientRepository;
@@ -17,7 +18,7 @@ public class ClientService {
     private final ClientRepository clientRepository;
 
     @Autowired
-    public ClientService(LocationServiceClient locationServiceClient, ClientRepository clientRepository) {
+    public ClientService(LocationServiceClient locationServiceClient, ClientRepository clientRepository, ClientController clientController) {
         this.locationServiceClient = locationServiceClient;
         this.clientRepository = clientRepository;
     }
@@ -40,6 +41,10 @@ public class ClientService {
     @Transactional(readOnly = true)
     public String getClientEmail(Long id){
         return clientRepository.findById(id).orElseThrow(() -> new RuntimeException("No user with id " + id)).getEmail();
+    }
+    @Transactional(readOnly = true)
+    public Long getClientIdByEmail(String email){
+        return clientRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("No user with email " + email)).getId();
     }
     @Transactional
     public Client updateClient(Long id, Client updatedClient) {
