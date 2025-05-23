@@ -108,8 +108,19 @@ public class ClientController {
         }
     }
 
-
-    // Получение геолокации пользователя
+    @GetMapping("/{id}/status")
+    public ResponseEntity<Boolean> getClientStatus(@PathVariable Long id) {
+        try{
+            clientService.getClientById(id);
+            if(clientService.getClientById(id).isEmployee()){
+                return new ResponseEntity<>(true, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+        }
+        catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
     @GetMapping("/{id}/location")
     public ResponseEntity<GeoPair> getClientLocation(@PathVariable Long id) {
         try {

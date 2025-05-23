@@ -26,4 +26,7 @@ public class Client {
     private Status status = Status.CLIENT;
 //    @OneToMany
 //    private List<Address> addresses;
+    public boolean isEmployee(){
+        return this.status == Status.EMPLOYEE;
+    }
 }
