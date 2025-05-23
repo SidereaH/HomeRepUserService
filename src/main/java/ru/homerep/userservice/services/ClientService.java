@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.homerep.userservice.controllers.ClientController;
 import ru.homerep.userservice.models.Client;
 import ru.homerep.userservice.models.GeoPair;
 import ru.homerep.userservice.repositories.ClientRepository;
@@ -18,7 +17,7 @@ public class ClientService {
     private final ClientRepository clientRepository;
 
     @Autowired
-    public ClientService(LocationServiceClient locationServiceClient, ClientRepository clientRepository, ClientController clientController) {
+    public ClientService(LocationServiceClient locationServiceClient, ClientRepository clientRepository) {
         this.locationServiceClient = locationServiceClient;
         this.clientRepository = clientRepository;
     }
