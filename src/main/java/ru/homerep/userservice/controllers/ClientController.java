@@ -115,7 +115,7 @@ public class ClientController {
             if(clientService.getClientById(id).isEmployee()){
                 return new ResponseEntity<>(true, HttpStatus.OK);
             }
-            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(false, HttpStatus.OK);
         }
         catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
